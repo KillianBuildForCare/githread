@@ -18,7 +18,7 @@ const PostLayout = ({user, createdAt, postId, className, children}: PostLayoutPr
 
     return (
         <div className={clsx("flex w-full flex-row items-start p-4", className)}>
-            <Avatar>
+            <Avatar size="default">
                 {
                     user.image ? (
                         <AvatarImage src={user.image} alt={user.username} />
