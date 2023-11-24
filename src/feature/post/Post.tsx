@@ -4,22 +4,24 @@ import PostLayout from "./PostLayout";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Heart, MessageCircle } from "lucide-react";
 import LikeButton from "./LikeButton";
+import { getAuthSession } from "@/lib/auth";
+import CommentButton from "./CommentButton";
 
 type PostProps = {
     post: PostHome
 }
 
-const Post = ({post}: PostProps) => {
+const Post = async ({post}: PostProps) => {
+    const session = await getAuthSession();
+    console.log('ici', post.likes)
     return (
         <PostLayout user={post.user} postId={post.id} createdAt={post.createdAt}>
             <Link href={`/posts/${post.id}`} className="text-sm text-foreground">
                 {post.content}
             </Link>
-            <div className="flex items-center gap-2">
-                <LikeButton postId={post.id} isLiked={post.likes.length > 0} />
-                <Link className={buttonVariants({variant: "ghost", size: "icon"})} href={`/posts/${post.id}/reply`}>
-                    <MessageCircle size={20}/>
-                </Link>
+            <div className="flex items-center gap-2 mt-4">
+                <LikeButton postId={post.id} isLiked={post.likes.filter((l) => l.userId === session?.user.id && session?.user.id).length > 0} userId={session?.user.id} />
+                <CommentButton postId={post.id} userId={session?.user.id} />
             </div>
             <div>
                 <Link className="text-muted-forground text-sm" href={`/posts/${post.id}`}>
